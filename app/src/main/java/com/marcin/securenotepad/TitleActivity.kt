@@ -2,6 +2,7 @@ package com.marcin.securenotepad
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -20,6 +21,7 @@ class TitleActivity : AppCompatActivity()
         // widgets
         val writePasswordTextView = findViewById<TextView>(R.id.writePasswordTextView)
         val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
+        val repeatPasswordEditText = findViewById<EditText>(R.id.repeatPasswordEditText)
         val goButton = findViewById<Button>(R.id.goButton)
 
         // preferences
@@ -43,23 +45,38 @@ class TitleActivity : AppCompatActivity()
             false -> "Write password:"
         }
 
+        // repeatPasswordEditText
+        repeatPasswordEditText.visibility = if (isOpenForTheFirstTime) View.VISIBLE else View.INVISIBLE
+
         // goButton
         goButton.setOnClickListener {
 
-            // what was written
-            val writtenPassword = passwordEditText.text.toString()
+            // written password
+            val password = passwordEditText.text.toString()
+            val repeatPassword = repeatPasswordEditText.text.toString()
 
             if (isOpenForTheFirstTime)
             {
-                if (writtenPassword.isEmpty())
+                if (password.isEmpty())
                 {
-                    Toast.makeText(this, "Write password", Toast.LENGTH_SHORT).show()
+                    // toast
+                    Toast.makeText(this, "Write password!", Toast.LENGTH_SHORT).show()
+                }
+                else if (repeatPassword.isEmpty())
+                {
+                    // toast
+                    Toast.makeText(this, "Repeat password!", Toast.LENGTH_SHORT).show()
+                }
+                else if (password != repeatPassword)
+                {
+                    // toast
+                    Toast.makeText(this, "Different passwords!", Toast.LENGTH_SHORT).show()
                 }
                 else
                 {
                     // save preferences
                     encryptedSharedPreferencesEditor.putBoolean("firstTime", false)
-                    encryptedSharedPreferencesEditor.putString("password", writtenPassword)
+                    encryptedSharedPreferencesEditor.putString("password", password)
                     encryptedSharedPreferencesEditor.putString("note", "new note")
                     encryptedSharedPreferencesEditor.apply()
 
@@ -72,14 +89,14 @@ class TitleActivity : AppCompatActivity()
             }
             else
             {
-                if (writtenPassword.isEmpty())
+                if (password.isEmpty())
                 {
                     // toast
-                    Toast.makeText(this, "Write password", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Write password!", Toast.LENGTH_SHORT).show()
                 }
                 else
                 {
-                    if (writtenPassword == encryptedSharedPreferences.getString("password", ""))
+                    if (password == encryptedSharedPreferences.getString("password", ""))
                     {
                         // toast
                         Toast.makeText(this, "Good password", Toast.LENGTH_SHORT).show()
@@ -90,7 +107,7 @@ class TitleActivity : AppCompatActivity()
                     else
                     {
                         // toast
-                        Toast.makeText(this, "Wrong password", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Wrong password!", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

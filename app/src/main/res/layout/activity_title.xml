@@ -33,6 +33,15 @@
         android:hint="password"
         android:inputType="textPassword"/>
 
+    <EditText
+        android:id="@+id/repeatPasswordEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/EditTextStyle"
+        android:autofillHints="name"
+        android:hint="repeat password"
+        android:inputType="textPassword"/>
+
     <Button
         android:id="@+id/goButton"
         android:layout_width="wrap_content"

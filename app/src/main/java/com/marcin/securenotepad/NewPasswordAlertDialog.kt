@@ -20,12 +20,12 @@ class NewPasswordAlertDialog(val activity : Activity) : Dialog(activity)
 
         // widgets
         val newPasswordEditText = findViewById<EditText>(R.id.newPasswordEditText)
+        val repeatNewPasswordEditText = findViewById<EditText>(R.id.repeatNewPasswordEditText)
         val cancelButton = findViewById<Button>(R.id.cancelButton)
         val changeButton = findViewById<Button>(R.id.changeButton)
 
         // cancelButton
         cancelButton.setOnClickListener {
-
             dismiss()
         }
 
@@ -45,11 +45,22 @@ class NewPasswordAlertDialog(val activity : Activity) : Dialog(activity)
 
             // written password
             val newPassword = newPasswordEditText.text.toString()
+            val repeatNewPassword = repeatNewPasswordEditText.text.toString()
 
             if (newPassword.isEmpty())
             {
                 // toast
-                Toast.makeText(activity, "Write password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Write password!", Toast.LENGTH_SHORT).show()
+            }
+            else if (repeatNewPassword.isEmpty())
+            {
+                // toast
+                Toast.makeText(activity, "Repeat password!", Toast.LENGTH_SHORT).show()
+            }
+            else if (newPassword != repeatNewPassword)
+            {
+                // toast
+                Toast.makeText(activity, "Different passwords!", Toast.LENGTH_SHORT).show()
             }
             else
             {
