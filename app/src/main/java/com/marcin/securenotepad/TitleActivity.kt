@@ -10,9 +10,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import java.sql.Time
+import java.util.*
 
 class TitleActivity : AppCompatActivity()
 {
+    var wrongPasswords = 1
+    var isWaiting = false
+    var waitStart = Calendar.getInstance().time
+    val waitTime = 10000
+    val maxAttempts = 3
+
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -50,6 +58,20 @@ class TitleActivity : AppCompatActivity()
 
         // goButton
         goButton.setOnClickListener {
+
+            // isWaiting
+            if (isWaiting)
+            {
+                if (Calendar.getInstance().time.time - waitStart.time > waitTime)
+                {
+                    isWaiting = false
+                }
+                else
+                {
+                    Toast.makeText(this, "Wait before another attempt!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+            }
 
             // written password
             val password = passwordEditText.text.toString()
@@ -101,13 +123,33 @@ class TitleActivity : AppCompatActivity()
                         // toast
                         Toast.makeText(this, "Good password", Toast.LENGTH_SHORT).show()
 
+                        // wrongPasswords
+                        wrongPasswords = 1
+
                         //change screen
                         startActivity(Intent(this, NoteActivity::class.java))
                     }
                     else
                     {
                         // toast
-                        Toast.makeText(this, "Wrong password!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Wrong password for $wrongPasswords. time!", Toast.LENGTH_SHORT).show()
+
+                        // clear password
+                        passwordEditText.text.clear()
+
+                        // increment
+                        wrongPasswords++
+
+                        // trigger wait
+                        if (wrongPasswords > maxAttempts)
+                        {
+                            wrongPasswords = 1
+                            isWaiting = true
+                            waitStart = Calendar.getInstance().time
+
+                            // toast
+                            Toast.makeText(this, "Wait $waitTime milliseconds!", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
