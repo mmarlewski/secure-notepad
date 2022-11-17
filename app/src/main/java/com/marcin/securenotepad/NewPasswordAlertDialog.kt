@@ -10,6 +10,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import java.security.MessageDigest
+import java.security.SecureRandom
+import java.util.*
 
 class NewPasswordAlertDialog(val activity : Activity) : Dialog(activity)
 {
@@ -64,8 +67,20 @@ class NewPasswordAlertDialog(val activity : Activity) : Dialog(activity)
             }
             else
             {
-                // save new password
-                encryptedSharedPreferencesEditor.putString("password", newPassword)
+                // hashing
+                val random = SecureRandom()
+                val encoder = Base64.getEncoder()
+                val digest = MessageDigest.getInstance("SHA-256")
+                val passwordByteArray = newPassword.toByteArray()
+                val saltByteArray = ByteArray(32)
+                random.nextBytes(saltByteArray)
+                val hashByteArray = digest.digest((passwordByteArray + saltByteArray))
+                val encodedHash = encoder.encodeToString(hashByteArray)
+                val encodedSalt = encoder.encodeToString(saltByteArray)
+
+                // save hash and salt
+                encryptedSharedPreferencesEditor.putString("encodedHash", encodedHash)
+                encryptedSharedPreferencesEditor.putString("encodedSalt", encodedSalt)
                 encryptedSharedPreferencesEditor.apply()
 
                 // toast

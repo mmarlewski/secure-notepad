@@ -2,6 +2,8 @@ package com.marcin.securenotepad
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Base64.decode
+import android.util.Base64.encodeToString
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -10,7 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import java.sql.Time
+import java.security.MessageDigest
+import java.security.SecureRandom
 import java.util.*
 
 class TitleActivity : AppCompatActivity()
@@ -96,9 +99,21 @@ class TitleActivity : AppCompatActivity()
                 }
                 else
                 {
+                    // hashing
+                    val random = SecureRandom()
+                    val encoder = Base64.getEncoder()
+                    val digest = MessageDigest.getInstance("SHA-256")
+                    val passwordByteArray = password.toByteArray()
+                    val saltByteArray = ByteArray(32)
+                    random.nextBytes(saltByteArray)
+                    val hashByteArray = digest.digest((passwordByteArray + saltByteArray))
+                    val encodedHash = encoder.encodeToString(hashByteArray)
+                    val encodedSalt = encoder.encodeToString(saltByteArray)
+
                     // save preferences
                     encryptedSharedPreferencesEditor.putBoolean("firstTime", false)
-                    encryptedSharedPreferencesEditor.putString("password", password)
+                    encryptedSharedPreferencesEditor.putString("encodedHash", encodedHash)
+                    encryptedSharedPreferencesEditor.putString("encodedSalt", encodedSalt)
                     encryptedSharedPreferencesEditor.putString("note", "new note")
                     encryptedSharedPreferencesEditor.apply()
 
@@ -118,7 +133,17 @@ class TitleActivity : AppCompatActivity()
                 }
                 else
                 {
-                    if (password == encryptedSharedPreferences.getString("password", ""))
+                    // hashing
+                    val decoder = Base64.getDecoder()
+                    val digest = MessageDigest.getInstance("SHA-256")
+                    val encodedHash = encryptedSharedPreferences.getString("encodedHash", "")
+                    val encodedSalt = encryptedSharedPreferences.getString("encodedSalt", "")
+                    val hashByteArray = decoder.decode(encodedHash)
+                    val saltByteArray = decoder.decode(encodedSalt)
+                    val enteredPasswordByteArray = password.toByteArray()
+                    val enteredHashByteArray = digest.digest(enteredPasswordByteArray + saltByteArray)
+
+                    if (hashByteArray contentEquals enteredHashByteArray)
                     {
                         // toast
                         Toast.makeText(this, "Good password", Toast.LENGTH_SHORT).show()
