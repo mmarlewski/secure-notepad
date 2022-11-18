@@ -18,29 +18,11 @@
         android:textSize="50sp" />
 
     <TextView
-        android:id="@+id/writePasswordTextView"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/TextViewStyle"
-        android:text="writePassword" />
-
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/EditTextStyle"
-        android:autofillHints="name"
-        android:hint="password"
-        android:inputType="textPassword"/>
-
-    <EditText
-        android:id="@+id/repeatPasswordEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/EditTextStyle"
-        android:autofillHints="name"
-        android:hint="repeat password"
-        android:inputType="textPassword"/>
+        android:text="textView"/>
 
     <Button
         android:id="@+id/goButton"
