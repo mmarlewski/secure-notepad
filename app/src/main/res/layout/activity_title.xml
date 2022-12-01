@@ -18,18 +18,44 @@
         android:textSize="50sp" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/writePasswordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/TextViewStyle"
-        android:text="textView"/>
+        android:text="writePassword" />
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/EditTextStyle"
+        android:autofillHints="name"
+        android:hint="password"
+        android:inputType="textPassword"/>
+
+    <EditText
+        android:id="@+id/repeatPasswordEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/EditTextStyle"
+        android:autofillHints="name"
+        android:hint="repeat password"
+        android:inputType="textPassword"/>
 
     <Button
-        android:id="@+id/goButton"
+        android:id="@+id/usePasswordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/ButtonStyle"
         android:backgroundTint="@color/orange"
-        android:text="go"/>
+        android:text="use password"/>
+
+    <Button
+        android:id="@+id/useBiometricsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ButtonStyle"
+        android:backgroundTint="@color/green"
+        android:text="use biometrics"/>
 
 </LinearLayout>

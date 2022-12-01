@@ -17,6 +17,7 @@ class SettingsActivity : AppCompatActivity()
         setContentView(R.layout.activity_settings)
 
         // widgets
+        val changePasswordTextView = findViewById<TextView>(R.id.changePasswordTextView)
         val deleteDataTextView = findViewById<TextView>(R.id.deleteDataTextView)
 
         // preferences
@@ -29,6 +30,14 @@ class SettingsActivity : AppCompatActivity()
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
                                                                           )
         val encryptedSharedPreferencesEditor = encryptedSharedPreferences.edit()
+
+        // changePasswordTextView
+        changePasswordTextView.setOnClickListener {
+
+            // dialog
+            val newPasswordAlertDialog = NewPasswordAlertDialog(this)
+            newPasswordAlertDialog.show()
+        }
 
         // deleteDataTextView
         deleteDataTextView.setOnClickListener {
